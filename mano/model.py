@@ -220,13 +220,13 @@ class MANO(nn.Module):
         self.register_buffer('shapedirs', to_tensor(to_np(shapedirs), dtype=dtype))
 
         j_regressor = to_tensor(to_np(data_struct.J_regressor), dtype=dtype)
-        self.register_buffer('J_regressor', j_regressor)
+        self.register_buffer('J_regressor', j_regressor.contiguous())
 
         # Pose blend shape basis: 6890 x 3 x 207, reshaped to 6890*3 x 207
         num_pose_basis = data_struct.posedirs.shape[-1]
         # 207 x 20670
         posedirs = np.reshape(data_struct.posedirs, [-1, num_pose_basis]).T
-        self.register_buffer('posedirs',to_tensor(to_np(posedirs), dtype=dtype))
+        self.register_buffer('posedirs',to_tensor(to_np(posedirs), dtype=dtype).contiguous())
 
         # indices of parents for each joints
         parents = to_tensor(to_np(data_struct.kintree_table[0])).long()
